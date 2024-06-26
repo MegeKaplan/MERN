@@ -1,12 +1,12 @@
 const authReducer = (state = { auth: null }, action) => {
   switch (action.type) {
     case "REGISTER":
-      localStorage.setItem("auth", JSON.stringify(action.payload));
+      localStorage.setItem("auth", JSON.stringify(action.payload.data));
       return {
         auth: action.payload,
       };
     case "LOGIN":
-      localStorage.setItem("auth", JSON.stringify(action.payload));
+      localStorage.setItem("auth", JSON.stringify(action.payload.data));
       return {
         auth: action.payload,
       };

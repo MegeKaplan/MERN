@@ -12,6 +12,12 @@ export const register = async (req, res) => {
       return res.status(500).json({ msg: "User is exist!" });
     }
 
+    const isUsernameUsing = await AuthSchema.findOne({ username: username });
+
+    if (isUsernameUsing) {
+      return res.status(500).json({ msg: "Username is using" });
+    }
+
     if (password.length < 6) {
       return res
         .status(500)
@@ -40,8 +46,9 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = AuthSchema.findOne(email);
+    const { username, email, password } = req.body;
+
+    const user = await AuthSchema.findOne({ email: email });
 
     if (!user) {
       return res.status(500).json({ msg: "User is not found!" });
@@ -49,7 +56,13 @@ export const login = async (req, res) => {
 
     const passwordCompare = await bcrypt.compare(password, user.password);
 
-    if (!user) {
+    console.log(password, user.password);
+
+    // if (!passwordCompare) {
+    //   return res.status(500).json({ msg: "Password is wrong!" });
+    // }
+
+    if (password.toString() !== user.password.toString()) {
       return res.status(500).json({ msg: "Password is wrong!" });
     }
 
